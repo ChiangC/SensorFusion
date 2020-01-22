@@ -31,3 +31,4 @@
 *.out
 *.app
 01_lidar_obstacle_detection/src/sensors/data/
+01_lidar_obstacle_detection/build/

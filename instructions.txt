@@ -1,0 +1,17 @@
+
+sudo add-apt-repository ppa:v-launchpad-jochen-sprickerhof-de/pcl 
+sudo apt-get update 
+sudo apt-get install libpcl-dev
+
+
+
+sudo ln -s libproj.so.9.1.0 libproj.so
+
+libproj.so.9链接文件 libproj.so.9.1.0源文件
+sudo ln -s libproj.so.9.1.0 libproj.so 重新链接文件为libproj.so
+
+
+禁用笔记本触摸板：sudo rmmod psmouse;
+开启笔记本触摸板：sudo modprobe psmouse;
+
+cd /media/chiang/SDCEngineer/SDC_Pros/SensorFusion/01_lidar_obstacle_detection/build
