@@ -32,3 +32,4 @@
 *.app
 01_lidar_obstacle_detection/src/sensors/data/
 01_lidar_obstacle_detection/build/
+01_lidar_obstacle_detection/src/quiz/ransac/build/

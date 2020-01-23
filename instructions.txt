@@ -15,3 +15,23 @@ sudo ln -s libproj.so.9.1.0 libproj.so 重新链接文件为libproj.so
 开启笔记本触摸板：sudo modprobe psmouse;
 
 cd /media/chiang/SDCEngineer/SDC_Pros/SensorFusion/01_lidar_obstacle_detection/build
+
+
+
+outro
+
+n.结尾部分
+
+
+
+
+
+
+
+
+
+
+
+
+
+
