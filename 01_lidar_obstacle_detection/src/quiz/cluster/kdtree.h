@@ -46,7 +46,7 @@ struct KdTree
 	}
 
 	void insertHelper(Node** node, uint depth, std::vector<float> point, int id){
-		if(*node == null){
+		/*if(*node == NULL){
 			*node = getNewNode(point, id);
 		}else{
 			if(depth%2 == 0){//splits the x region
@@ -62,6 +62,18 @@ struct KdTree
 					insertHelper(&(*node)->right, getTreeDepth(root), point, id);
 				}
 			}
+		}*/
+		if(*node == NULL){
+			*node = getNewNode(point, id);
+		}else{
+			//calculate current dim
+			uint cd = depth%2;
+			if(point[cd] < (*node)->left->point[cd]){
+					// insertHelper(&(*node)->left, getTreeDepth(root), point, id);
+					insertHelper(&(*node)->left, depth + 1, point, id);
+				}else{
+					insertHelper(&(*node)->right, depth + 1, point, id);
+				}
 		}
 	}
 
@@ -69,20 +81,8 @@ struct KdTree
 	{
 		// TODO: Fill in this function to insert a new point into the tree
 		// the function should create a new node and place correctly with in the root 
-		insertHelper(root, getTreeDepth(root), point, id);
-		// int treeDepth = getTreeDepth(root);
-		// if(*node == NULL)
-		// {
-		// 	*node = getNewNode(data);
-		// }
-		// else if(data < (*node)->data)
-		// {
-		// 	insert(&(*node)->left, data);
-		// }
-		// else
-		// {
-		// 	insert(&(*node)->right, data);
-		// }
+		// insertHelper(&root, getTreeDepth(root), point, id);
+		insertHelper(&root, 0, point, id);
 	}
 
 	// return a list of point ids in the tree that are within distance of target
