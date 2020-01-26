@@ -16,7 +16,7 @@ sudo ln -s libproj.so.9.1.0 libproj.so 重新链接文件为libproj.so
 
 cd /media/chiang/SDCEngineer/SDC_Pros/SensorFusion/01_lidar_obstacle_detection/build
 
-
+https://blog.csdn.net/weixin_40215443/category_8529909.html
 
 outro
 
@@ -31,6 +31,15 @@ chronological
 英 [ˌkrɒnəˈlɒdʒɪkl] 美 [ˌkrɑːnəˈlɑːdʒɪkl]
 
 adj.按发生时间顺序排列的;按时间计算的(年龄)(相对于身体、智力或情感等方面的发展而言)
+
+voxel
+体积元素;体素;体元;体元素;三维像素
+
+entail
+英 [ɪnˈteɪl] 美 [ɪnˈteɪl]
+v.牵涉;需要;使必要
+
+
 
 
 
