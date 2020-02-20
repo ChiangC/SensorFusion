@@ -101,3 +101,50 @@ void detKeypointsShiTomasi(vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool b
         cv::waitKey(0);
     }
 }
+
+// Detect keypoints in image using the traditional Harris  detector
+void detKeypointsHarris(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool bVis=false)
+{
+
+}
+
+// Detect keypoints in image using detector by detector type:HARRIS, FAST, BRISK, ORB, AKAZE, and SIFT
+void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, std::string detectorType, bool bVis=false)
+{
+    if(detectorType.compare("HARRIS") == 0)
+    {
+        detKeypointsHarris(keypoints, img, bVis);
+    
+    }else if(detectorType.compare("FAST") == 0)
+    {
+        int threshold = 30;                                                              // difference between intensity of the central pixel and pixels of a circle around this pixel
+        bool bNMS = true;                                                                // perform non-maxima suppression on keypoints
+        cv::FastFeatureDetector::DetectorType type = cv::FastFeatureDetector::TYPE_9_16; // TYPE_9_16, TYPE_7_12, TYPE_5_8
+        cv::Ptr<cv::FeatureDetector> detector = cv::FastFeatureDetector::create(threshold, bNMS, type);
+        detector->detect(img, keypoints);
+
+    }else if (detectorType.compare("BRISK") == 0)
+    {
+        /* code */
+    }else if (detectorType.compare("ORB") == 0)
+    {
+        /* code */
+    }else if (detectorType.compare("AKAZE") == 0)
+    {
+        /* code */
+    }else if (detectorType.compare("SIFT") == 0)
+    {
+        /* code */
+    }
+    
+    // visualize results
+    if (bVis)
+    {
+        cv::Mat visImage = img.clone();
+        cv::drawKeypoints(img, keypoints, visImage, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+        string windowName = detectorType+" Detector Results";
+        cv::namedWindow(windowName, 6);
+        imshow(windowName, visImage);
+        cv::waitKey(0);
+    }
+}
