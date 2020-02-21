@@ -108,14 +108,10 @@ void detKeypointsHarris(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool
 
 }
 
-// Detect keypoints in image using detector by detector type:HARRIS, FAST, BRISK, ORB, AKAZE, and SIFT
+// Detect keypoints in image using modern detector by detector type:FAST, BRISK, ORB, AKAZE, and SIFT
 void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, std::string detectorType, bool bVis=false)
 {
-    if(detectorType.compare("HARRIS") == 0)
-    {
-        detKeypointsHarris(keypoints, img, bVis);
-    
-    }else if(detectorType.compare("FAST") == 0)
+    if(detectorType.compare("FAST") == 0)
     {
         int threshold = 30;                                                              // difference between intensity of the central pixel and pixels of a circle around this pixel
         bool bNMS = true;                                                                // perform non-maxima suppression on keypoints
