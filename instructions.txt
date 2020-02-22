@@ -18,6 +18,30 @@ cd /media/chiang/SDCEngineer/SDC_Pros/SensorFusion/01_lidar_obstacle_detection/b
 
 https://blog.csdn.net/weixin_40215443/category_8529909.html
 
+查看opencv版本
+pkg-config opencv --modversion
+
+===============================================================
+安装opencv
+sudo apt-get install git
+git clone https://github.com/opencv/opencv.git
+
+mkdir build
+cd build
+
+cmake ../
+
+make
+sudo make install
+
+import cv2 as cv
+print(cv.__version__)
+
+安装opencv
+sudo apt-get install libcv-dev
+
+https://www.cnblogs.com/laizhenghong2012/p/11329916.html
+===============================================================
 outro
 
 n.结尾部分

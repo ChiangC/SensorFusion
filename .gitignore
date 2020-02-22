@@ -34,3 +34,5 @@
 01_lidar_obstacle_detection/build/
 01_lidar_obstacle_detection/src/quiz/ransac/build/
 01_lidar_obstacle_detection/src/quiz/cluster/build/
+detect_keypoints/build/
+cornerness_harris/build/
