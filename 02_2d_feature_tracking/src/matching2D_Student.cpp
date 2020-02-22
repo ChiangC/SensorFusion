@@ -48,9 +48,9 @@ void descKeypoints(vector<cv::KeyPoint> &keypoints, cv::Mat &img, cv::Mat &descr
 
         extractor = cv::BRISK::create(threshold, octaves, patternScale);
     }
-    else
+    else// BRIEF, ORB, FREAK, AKAZE, SIFT
     {
-
+        //extractor = cv::DescriptorExtractor::create("ORB");
         //...
     }
 
@@ -180,35 +180,34 @@ void detKeypointsHarris(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool
 // Detect keypoints in image using modern detector by detector type:FAST, BRISK, ORB, AKAZE, and SIFT
 void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, std::string detectorType, bool bVis=false)
 {
+    cv::Ptr<cv::FeatureDetector> detector;
     if(detectorType.compare("FAST") == 0)
     {
         int threshold = 30;                                                              // difference between intensity of the central pixel and pixels of a circle around this pixel
         bool bNMS = true;                                                                // perform non-maxima suppression on keypoints
         cv::FastFeatureDetector::DetectorType type = cv::FastFeatureDetector::TYPE_9_16; // TYPE_9_16, TYPE_7_12, TYPE_5_8
-        cv::Ptr<cv::FeatureDetector> detector = cv::FastFeatureDetector::create(threshold, bNMS, type);
-        detector->detect(img, keypoints);
+        detector = cv::FastFeatureDetector::create(threshold, bNMS, type);
 
     }else if (detectorType.compare("ORB") == 0)
     {
-        cv::Ptr<cv::FeatureDetector> detector = cv::ORB.create();
-        detector->detect(img, keypoints);
+        // detector=cv::FeatureDetector::create("ORB");
+        detector = cv::ORB.create();
     }else if (detectorType.compare("BRISK") == 0)
     {
-        cv::Ptr<cv::BRISK> detector = cv::BRISK.create();
-        detector->detect(img, keypoints);
+        detector = cv::BRISK.create();
     }else if (detectorType.compare("AKAZE") == 0)
     {
-        cv::Ptr<cv::AKAZE> detector = cv::AKAZE.create();
-        detector->detect(img, keypoints);
+        detector = cv::AKAZE.create();
     }else if (detectorType.compare("SIFT") == 0)
     {
-        cv::Ptr<cv::xfeatures2d::SiftFeatureDetector> ptrSIFT =
-        cv::xfeatures2d::SiftFeatureDetector::create();
-
-        cv::Ptr<cv::xfeatures2d::SiftFeatureDetector> detector = cv::xfeatures2d::SiftFeatureDetector::create();
-        detector->detect(img, keypoints);
+        // 如果使用 sift, surf ，之前要初始化nonfree模块
+        cv::initModule_nonfree();
+        //cv::xfeatures2d::SIFT
+        detector = cv::xfeatures2d::SiftFeatureDetector::create();//typedef SIFT cv::xfeatures2d::SiftFeatureDetector
     }
-    
+
+    detector->detect(img, keypoints);
+
     // visualize results
     if (bVis)
     {

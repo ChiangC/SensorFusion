@@ -101,10 +101,20 @@ int main(int argc, const char *argv[])
 
         // only keep keypoints on the preceding vehicle
         bool bFocusOnVehicle = true;
-        cv::Rect vehicleRect(535, 180, 180, 150);
+        cv::Rect vehicleRect(535, 180, 180, 150);//cx = 535, cy = 180, w = 180, h = 150
         if (bFocusOnVehicle)
         {
-            // ...
+            auto iter = keypoints.begin();
+            while (iter != keypoints.end())
+            {	
+                if( !(iter->pt.x>vehicleRect.tl().x&&iter->pt.x<vehicleRect.br().x&&iter->pt.y>vehicleRect.tl().y&&iter->pt.y<vehicleRect.br().y))
+                {
+                    iter = keypoints.erase(iter);
+                }else{
+                    iter++;
+                }
+                
+            }
         }
 
         //// EOF STUDENT ASSIGNMENT
