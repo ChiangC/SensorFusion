@@ -188,18 +188,25 @@ void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, std:
         cv::Ptr<cv::FeatureDetector> detector = cv::FastFeatureDetector::create(threshold, bNMS, type);
         detector->detect(img, keypoints);
 
-    }else if (detectorType.compare("BRISK") == 0)
-    {
-        /* code */
     }else if (detectorType.compare("ORB") == 0)
     {
-        /* code */
+        cv::Ptr<cv::FeatureDetector> detector = cv::ORB.create();
+        detector->detect(img, keypoints);
+    }else if (detectorType.compare("BRISK") == 0)
+    {
+        cv::Ptr<cv::BRISK> detector = cv::BRISK.create();
+        detector->detect(img, keypoints);
     }else if (detectorType.compare("AKAZE") == 0)
     {
-        /* code */
+        cv::Ptr<cv::AKAZE> detector = cv::AKAZE.create();
+        detector->detect(img, keypoints);
     }else if (detectorType.compare("SIFT") == 0)
     {
-        /* code */
+        cv::Ptr<cv::xfeatures2d::SiftFeatureDetector> ptrSIFT =
+        cv::xfeatures2d::SiftFeatureDetector::create();
+
+        cv::Ptr<cv::xfeatures2d::SiftFeatureDetector> detector = cv::xfeatures2d::SiftFeatureDetector::create();
+        detector->detect(img, keypoints);
     }
     
     // visualize results
