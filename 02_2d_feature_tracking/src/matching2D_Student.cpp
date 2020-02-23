@@ -18,20 +18,46 @@ void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::Key
     }
     else if (matcherType.compare("MAT_FLANN") == 0)
     {
-        // ...
+        if (descSource.type() != CV_32F)
+        { // OpenCV bug workaround : convert binary descriptors to floating point due to a bug in current OpenCV implementation
+            descSource.convertTo(descSource, CV_32F);
+            descRef.convertTo(descRef, CV_32F);
+        }
+
+        matcher = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
+        cout << "FLANN matching";
+
+        // matcher = cv::FlannBasedMatcher::create();
     }
 
     // perform matching task
+    vector<vector<cv::DMatch>> _matches;
     if (selectorType.compare("SEL_NN") == 0)
     { // nearest neighbor (best match)
-
-        matcher->match(descSource, descRef, matches); // Finds the best match for each descriptor in desc1
+        double t = (double)cv::getTickCount();
+        matcher->match(descSource, descRef, _matches); // Finds the best match for each descriptor in desc1
+        t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
+        cout << " (NN) with n=" << _matches.size() << " matches in " << 1000 * t / 1.0 << " ms" << endl;
     }
     else if (selectorType.compare("SEL_KNN") == 0)
     { // k nearest neighbors (k=2)
-
-        // ...
+        double t = (double)cv::getTickCount();
+        matcher->knnMatch(descSource, descRef, _matches, 2);
+        t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
+        cout << " (KNN) with n=" << _matches.size() << " matches in " << 1000 * t / 1.0 << " ms" << endl;
     }
+
+    // filter matches using descriptor distance ratio test
+    double minDescDistRatio = 0.8;
+    for (auto it = _matches.begin(); it != _matches.end(); ++it)
+    {
+
+        if ((*it)[0].distance < minDescDistRatio * (*it)[1].distance)
+        {
+            matches.push_back((*it)[0]);
+        }
+    }
+    cout << "# keypoints removed = " << _matches.size() - matches.size() << endl;
 }
 
 // Use one of several types of state-of-art descriptors to uniquely identify keypoints
