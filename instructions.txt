@@ -41,6 +41,9 @@ print(cv.__version__)
 sudo apt-get install libcv-dev
 
 https://www.cnblogs.com/laizhenghong2012/p/11329916.html
+
+https://blog.csdn.net/qq_20625573/article/details/100009007
+
 ===============================================================
 outro
 

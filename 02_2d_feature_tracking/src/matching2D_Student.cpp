@@ -206,8 +206,11 @@ void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, std:
         detector = cv::xfeatures2d::SiftFeatureDetector::create();//typedef SIFT cv::xfeatures2d::SiftFeatureDetector
     }
 
+    double t = (double)cv::getTickCount();
     detector->detect(img, keypoints);
-
+    t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
+    cout << detectorType+" with n= " << corners.size() << " keypoints in " << 1000 * t / 1.0 << " ms" << endl;
+    
     // visualize results
     if (bVis)
     {
