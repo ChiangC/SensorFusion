@@ -36,3 +36,4 @@
 01_lidar_obstacle_detection/src/quiz/cluster/build/
 detect_keypoints/build/
 cornerness_harris/build/
+02_2d_feature_tracking/build/

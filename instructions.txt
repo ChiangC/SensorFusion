@@ -44,6 +44,8 @@ https://www.cnblogs.com/laizhenghong2012/p/11329916.html
 
 https://blog.csdn.net/qq_20625573/article/details/100009007
 
+sudo apt-get install libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev
+
 ===============================================================
 outro
 
@@ -66,7 +68,13 @@ entail
 英 [ɪnˈteɪl] 美 [ɪnˈteɪl]
 v.牵涉;需要;使必要
 
+intrinsic
+英 [ɪnˈtrɪnzɪk] 美 [ɪnˈtrɪnzɪk]
+adj.固有的;内在的;本身的
 
+
+photorealistic
+真实感;逼真;拟真;光保真的;片质量
 
 
 

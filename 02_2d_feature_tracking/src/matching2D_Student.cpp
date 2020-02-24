@@ -31,33 +31,37 @@ void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::Key
     }
 
     // perform matching task
-    vector<vector<cv::DMatch>> _matches;
+    // vector<vector<cv::DMatch>> _matches;
     if (selectorType.compare("SEL_NN") == 0)
     { // nearest neighbor (best match)
         double t = (double)cv::getTickCount();
-        matcher->match(descSource, descRef, _matches); // Finds the best match for each descriptor in desc1
+        matcher->match(descSource, descRef, matches); // Finds the best match for each descriptor in desc1
         t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
-        cout << " (NN) with n=" << _matches.size() << " matches in " << 1000 * t / 1.0 << " ms" << endl;
+        cout << " (NN) with n=" << matches.size() << " matches in " << 1000 * t / 1.0 << " ms" << endl;
     }
     else if (selectorType.compare("SEL_KNN") == 0)
     { // k nearest neighbors (k=2)
+        vector<vector<cv::DMatch>> knn_matches;
         double t = (double)cv::getTickCount();
-        matcher->knnMatch(descSource, descRef, _matches, 2);
+        matcher->knnMatch(descSource, descRef, knn_matches, 2); // finds the 2 best matches
         t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
-        cout << " (KNN) with n=" << _matches.size() << " matches in " << 1000 * t / 1.0 << " ms" << endl;
-    }
+        cout << " (KNN) with n=" << knn_matches.size() << " matches in " << 1000 * t / 1.0 << " ms" << endl;
 
-    // filter matches using descriptor distance ratio test
-    double minDescDistRatio = 0.8;
-    for (auto it = _matches.begin(); it != _matches.end(); ++it)
-    {
-
-        if ((*it)[0].distance < minDescDistRatio * (*it)[1].distance)
+        // filter matches using descriptor distance ratio test
+        double minDescDistRatio = 0.8;
+        for (auto it = knn_matches.begin(); it != knn_matches.end(); ++it)
         {
-            matches.push_back((*it)[0]);
+
+            if ((*it)[0].distance < minDescDistRatio * (*it)[1].distance)
+            {
+                matches.push_back((*it)[0]);
+            }
         }
+
+        // cout << " (KNN) with n=" << matches.size() << " matches in " << 1000 * t / 1.0 << " ms" << endl;
     }
-    cout << "# keypoints removed = " << _matches.size() - matches.size() << endl;
+
+    
 }
 
 // Use one of several types of state-of-art descriptors to uniquely identify keypoints
@@ -142,7 +146,7 @@ void detKeypointsShiTomasi(vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool b
 }
 
 // Detect keypoints in image using the traditional Harris  detector
-void detKeypointsHarris(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool bVis=false)
+void detKeypointsHarris(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool bVis)
 {
     //Detector parameters
     int blockSize = 2; //for every pixel, a blockSize x blockSize neigborhood is considered
@@ -160,15 +164,14 @@ void detKeypointsHarris(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool
     if(bVis){
         //visualize results
         string windowName = "Harris Corner Detector Response Matrix";
-        cv::nameWindow(windowName, 4);
+        cv::namedWindow(windowName, 4);
         cv::imshow(windowName, dst_norm_scaled);
         cv::waitKey(0);
     }
 
     //Look for prominet corners and instantiate keypoints
-    vector<cv::KeyPoint> keypoints;
     double maxOverlap = 0.0;//max. permissible overlap between two features in %, used during non-maxima supression 
-    for(size_t j = ; j < dst_norm.rows;j++)
+    for(size_t j = 0; j < dst_norm.rows;j++)
     {
         for(size_t i = 0; i< dst_norm.cols; i++)
         {
@@ -183,7 +186,7 @@ void detKeypointsHarris(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool
 
                 //perform non-maximum suppression (NMS) in local neighbourhood around new key point
                 bool bOverlap = false;
-                for(auto it = keypoints.begin(); i != keypoints.end; ++it)
+                for(auto it = keypoints.begin(); it != keypoints.end(); ++it)
                 {
                     double kptOverlap = cv::KeyPoint::overlap(newKeyPoint, *it);
                     if(kptOverlap > maxOverlap){
@@ -206,10 +209,10 @@ void detKeypointsHarris(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool
 
     if(bVis){
         //visualize keypoints
-        windowName = "Harris Corner Detection Results";
+        string windowName = "Harris Corner Detection Results";
         cv::namedWindow(windowName, 5);
         cv::Mat visImage = dst_norm_scaled.clone();
-        cv::drawKeypoints(dst_norm_scaled, keypoints, visImage; cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+        cv::drawKeypoints(dst_norm_scaled, keypoints, visImage, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
         cv::imshow(windowName, visImage);
         cv::waitKey(0);
     }
@@ -217,7 +220,7 @@ void detKeypointsHarris(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool
 }
 
 // Detect keypoints in image using modern detector by detector type:FAST, BRISK, ORB, AKAZE, and SIFT
-void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, std::string detectorType, bool bVis=false)
+void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, std::string detectorType, bool bVis)
 {
     cv::Ptr<cv::FeatureDetector> detector;
     if(detectorType.compare("FAST") == 0)
@@ -230,17 +233,17 @@ void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, std:
     }else if (detectorType.compare("ORB") == 0)
     {
         // detector=cv::FeatureDetector::create("ORB");
-        detector = cv::ORB.create();
+        detector = cv::ORB::create();
     }else if (detectorType.compare("BRISK") == 0)
     {
-        detector = cv::BRISK.create();
+        detector = cv::BRISK::create();
     }else if (detectorType.compare("AKAZE") == 0)
     {
-        detector = cv::AKAZE.create();
+        detector = cv::AKAZE::create();
     }else if (detectorType.compare("SIFT") == 0)
     {
         // 如果使用 sift, surf ，之前要初始化nonfree模块
-        cv::initModule_nonfree();
+        // cv::initModule_nonfree();
         //cv::xfeatures2d::SIFT
         detector = cv::xfeatures2d::SiftFeatureDetector::create();//typedef SIFT cv::xfeatures2d::SiftFeatureDetector
     }
@@ -248,7 +251,7 @@ void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, std:
     double t = (double)cv::getTickCount();
     detector->detect(img, keypoints);
     t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
-    cout << detectorType+" with n= " << corners.size() << " keypoints in " << 1000 * t / 1.0 << " ms" << endl;
+    cout << detectorType+" with n= " << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms" << endl;
 
     // visualize results
     if (bVis)

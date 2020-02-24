@@ -66,8 +66,8 @@ int main(int argc, const char *argv[])
             dataBuffer.push_back(frame);
         }else
         {
-            dataBuffer.erase(dataBuffer.end());//delete the last image
-            dataBuffer.insert(dataBuffer.begin());//add a new image at the front of dataBuffer
+            dataBuffer.erase(dataBuffer.begin());//delete the first image
+            dataBuffer.insert(dataBuffer.end(), frame);//add a new image at the end of dataBuffer
         }
         
 
@@ -78,7 +78,7 @@ int main(int argc, const char *argv[])
 
         // extract 2D keypoints from current image
         vector<cv::KeyPoint> keypoints; // create empty feature list for current image
-        string detectorType = "SHITOMASI";
+        string detectorType = "SHITOMASI";//SHITOMASI, HARRIS, FAST, BRISK, ORB, AKAZE, SIFT
 
         //// STUDENT ASSIGNMENT
         //// TASK MP.2 -> add the following keypoint detectors in file matching2D.cpp and enable string-based selection based on detectorType
@@ -87,7 +87,7 @@ int main(int argc, const char *argv[])
         if (detectorType.compare("SHITOMASI") == 0)
         {
             detKeypointsShiTomasi(keypoints, imgGray, false);
-        }else if (detectorTye.compare("HARRIS") == 0)
+        }else if (detectorType.compare("HARRIS") == 0)
         {
             detKeypointsHarris(keypoints, imgGray, false);
         }else
@@ -144,7 +144,7 @@ int main(int argc, const char *argv[])
         //// -> BRIEF, ORB, FREAK, AKAZE, SIFT
 
         cv::Mat descriptors;
-        string descriptorType = "BRISK"; // BRIEF, ORB, FREAK, AKAZE, SIFT
+        string descriptorType = "BRISK"; //BRISK, BRIEF, ORB, FREAK, AKAZE, SIFT
         descKeypoints((dataBuffer.end() - 1)->keypoints, (dataBuffer.end() - 1)->cameraImg, descriptors, descriptorType);
         //// EOF STUDENT ASSIGNMENT
 
@@ -177,6 +177,7 @@ int main(int argc, const char *argv[])
             (dataBuffer.end() - 1)->kptMatches = matches;
 
             cout << "#4 : MATCH KEYPOINT DESCRIPTORS done" << endl;
+            cout << "====================================" << endl;
 
             // visualize matches between current and previous image
             bVis = true;
