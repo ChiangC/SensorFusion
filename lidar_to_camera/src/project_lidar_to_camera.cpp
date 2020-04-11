@@ -47,6 +47,18 @@ void projectLidarToCamera2()
     cv::Mat X(4,1,cv::DataType<double>::type);
     cv::Mat Y(3,1,cv::DataType<double>::type);
     for(auto it=lidarPoints.begin(); it!=lidarPoints.end(); ++it) {
+        //The code below shows how a filter can be applied to remove Lidar points that do not satisfy a set of constraints, i.e. they are …
+
+        //… positioned behind the Lidar sensor and thus have a negative x coordinate.
+        //… too far away in x-direction and thus exceeding an upper distance limit.
+        //… too far off to the sides in y-direction and thus not relevant for collision detection
+        //… too close to the road surface in negative z-direction.
+        //… showing a reflectivity close to zero, which might indicate low reliability.
+        float maxX = 25.0, maxY = 6.0, minZ = -1.4; 
+        if(it->x > maxX || it->x < 0.0 || abs(it->y) > maxY || it->z < minZ || it->r<0.01 )
+        {
+            continue; // skip to next point
+        }
 
         // 1. Convert current Lidar point into homogeneous coordinates and store it in the 4D variable X.
 
