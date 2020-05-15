@@ -265,7 +265,8 @@ void UKF::Prediction(double delta_t) {// time diff in sec
     P = P + weights_(i) * x_diff * x_diff.transpose() ;
   }
 
-
+  x_ = x;
+  P_ = P;
 
 }
 
